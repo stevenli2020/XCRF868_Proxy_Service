@@ -143,7 +143,7 @@ def get_status_loop(threadName):
     global SERVICE_CONFIG,STATUS_OBJ
     time.sleep(1)
     while 1:
-        url = 'http://'+SERVICE_CONFIG['READER_IP']+':'+SERVICE_CONFIG['READER_API_PORT']+'/api/v1.0/general'
+        url = 'http://'+SERVICE_CONFIG['READER_IP']+':'+str(SERVICE_CONFIG['READER_API_PORT'])+'/api/v1.0/general'
         try:
             x = requests.post(url, json = {'GetDeviceInfo': {'field_all': True}}, timeout=2)
         except requests.exceptions.RequestException as e:
@@ -176,8 +176,8 @@ def main():
     global SERVICE_CONFIG
     while 1:
         try:
-            print("Connecting to reader @ "+SERVICE_CONFIG['READER_IP'])+":"+str(SERVICE_CONFIG['READER_API_PORT'])
-            url = 'http://'+SERVICE_CONFIG['READER_IP']+':'+SERVICE_CONFIG['READER_API_PORT']+'/api/v1.0/general'
+            print("Connecting to reader @ "+SERVICE_CONFIG['READER_IP']+":"+str(SERVICE_CONFIG['READER_API_PORT']))
+            url = 'http://'+SERVICE_CONFIG['READER_IP']+':'+str(SERVICE_CONFIG['READER_API_PORT'])+'/api/v1.0/general'
             x = requests.post(url, json = {'GetDeviceInfo': {'field_all': True}}, timeout=3)
             response = json.loads(x.text)
             SN = ""
@@ -186,7 +186,7 @@ def main():
             print("Reader connected, SN = "+SN)    
             DATA_REPORT_OBJ['reader.serial'] = SN
             break            
-        except:
+        except :
             print("Reader not connected, retry after 2 seconds")
             time.sleep(2)
             pass
@@ -194,7 +194,7 @@ def main():
     _thread.start_new_thread( data_report_loop, ("svc",)) # thread to post data reports
     _thread.start_new_thread( status_report_loop, ("report_status",)) # thread to post status reports
     _thread.start_new_thread( get_status_loop, ("get_status",)) # thread to get status periodically
-    wsapp = websocket.WebSocketApp("ws://"+IP+":"+SERVICE_CONFIG['READER_WS_PORT'], on_message=on_message, on_close=on_close, on_open=on_open)
+    wsapp = websocket.WebSocketApp("ws://"+IP+":"+str(SERVICE_CONFIG['READER_WS_PORT']), on_message=on_message, on_close=on_close, on_open=on_open)
     wsapp.run_forever() 
     
 if __name__ == "__main__":
