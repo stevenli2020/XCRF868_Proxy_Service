@@ -11,8 +11,21 @@ import random
 if "SERVICE_CONFIG" in os.environ:
     SERVICE_CONFIG = json.loads(os.environ["SERVICE_CONFIG"])
 else: # default config when configuration is not available from env
-    SERVICE_CONFIG = {"STATUS_REPORT_TIMEOUT_S":7,"DATA_REPORT_TIMEOUT_S":10,"DATA_REPORT_INTERVAL_S":30,"STATUS_REPORT_INTERVAL_S":600,"READER_IP":"192.168.0.155","READER_API_PORT":5000,"READER_WS_PORT":7681,"READER_POWER":[25],"STATUS_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/statusevent","DATA_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/tagevent","SECRET_CHARACTER_KEY":"7Bf5mdnVt2SCMEvgFcJMk2rk20DVHj"}
-    
+    SERVICE_CONFIG = {
+	"STATUS_REPORT_TIMEOUT_S": 7,
+	"DATA_REPORT_TIMEOUT_S": 10,
+	"DATA_REPORT_INTERVAL_S": 30,
+	"STATUS_REPORT_INTERVAL_S": 600,
+	"READER_IP": "192.168.0.155",
+	"READER_API_PORT": 5000,
+	"READER_WS_PORT": 7681,
+	"READER_POWER": [
+		25
+	],
+	"STATUS_ENDPOINT": "https://xxx.xxx.xxx/api/v1/statusevent",
+	"DATA_ENDPOINT": "https://xxx.xxx.xxx/api/v1/tagevent",
+	"SECRET_CHARACTER_KEY": "7Bf5mdnVt2SCMEvgFcJMk2rk20DVHj"
+	}    
 SN = ""
 IP = SERVICE_CONFIG["READER_IP"]
 ANTENNA_POWER = SERVICE_CONFIG["READER_POWER"]
