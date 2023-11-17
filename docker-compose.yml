@@ -1,6 +1,6 @@
 version: '3'
 services:
-    debian_python3_ssh:
+    scanproxy:
         stdin_open: true
         tty: true
         restart: always
