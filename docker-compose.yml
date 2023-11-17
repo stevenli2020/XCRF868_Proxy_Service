@@ -8,11 +8,16 @@ services:
         networks:
             - rfid_net
         environment:
-            - SERVICE_CONFIG={"STATUS_REPORT_TIMEOUT_S":7,"DATA_REPORT_TIMEOUT_S":10,"DATA_REPORT_INTERVAL_S":30,"STATUS_REPORT_INTERVAL_S":600,"READER_IP":"188.166.178.188","READER_API_PORT":10004,"READER_WS_PORT":7681,"READER_POWER":[25],"STATUS_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/statusevent","DATA_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/tagevent","SECRET_CHARACTER_KEY":"7Bf5mdnVt2SCMEvgFcJMk2rk20DVHj"}
+            - SERVICE_CONFIG={"STATUS_REPORT_TIMEOUT_S":7,"DATA_REPORT_TIMEOUT_S":10,"DATA_REPORT_INTERVAL_S":30,"STATUS_REPORT_INTERVAL_S":600,"READER_IP":"192.168.10.1","READER_API_PORT":5000,"READER_WS_PORT":7681,"READER_POWER":[25],"STATUS_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/statusevent","DATA_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/tagevent","SECRET_CHARACTER_KEY":"7Bf5mdnVt2SCMEvgFcJMk2rk20DVHj"}
         volumes:
             - /app:/app
         ports:
             - "22"
+        logging:
+            driver:
+                - json-file
+            options:
+                max-size: 10m            
         image: stevenli2019/debian_python3_ssh
         command: bash #/sbin/entrypoint.sh
 networks:
@@ -20,5 +25,3 @@ networks:
         ipam: 
             config:
                 - subnet: 192.168.10.0/24
-           
-       
