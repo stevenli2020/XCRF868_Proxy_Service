@@ -11,7 +11,7 @@ import random
 if "SERVICE_CONFIG" in os.environ:
     SERVICE_CONFIG = json.loads(os.environ["SERVICE_CONFIG"])
 else: # default config when configuration is not available from env
-    SERVICE_CONFIG = {"STATUS_REPORT_TIMEOUT_S":7,"DATA_REPORT_TIMEOUT_S":10,"DATA_REPORT_INTERVAL_S":30,"STATUS_REPORT_INTERVAL_S":600,"READER_IP":"192.168.0.155","READER_POWER":[25],"STATUS_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/statusevent","DATA_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/tagevent","SECRET_CHARACTER_KEY":"7Bf5mdnVt2SCMEvgFcJMk2rk20DVHj"}
+    SERVICE_CONFIG = {"STATUS_REPORT_TIMEOUT_S":7,"DATA_REPORT_TIMEOUT_S":10,"DATA_REPORT_INTERVAL_S":30,"STATUS_REPORT_INTERVAL_S":600,"READER_IP":"192.168.0.155","READER_API_PORT":5000,"READER_WS_PORT":7681,"READER_POWER":[25],"STATUS_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/statusevent","DATA_ENDPOINT":"https://ONETIMEproxydev.azurewebsites.net/api/v1/tagevent","SECRET_CHARACTER_KEY":"7Bf5mdnVt2SCMEvgFcJMk2rk20DVHj"}
     
 SN = ""
 IP = SERVICE_CONFIG["READER_IP"]
@@ -143,7 +143,7 @@ def get_status_loop(threadName):
     global SERVICE_CONFIG,STATUS_OBJ
     time.sleep(1)
     while 1:
-        url = 'http://'+SERVICE_CONFIG['READER_IP']+':5000/api/v1.0/general'
+        url = 'http://'+SERVICE_CONFIG['READER_IP']+':'+SERVICE_CONFIG['READER_API_PORT']+'/api/v1.0/general'
         try:
             x = requests.post(url, json = {'GetDeviceInfo': {'field_all': True}}, timeout=2)
         except requests.exceptions.RequestException as e:
@@ -173,10 +173,11 @@ def get_status_loop(threadName):
             time.sleep(10) 
 
 def main():
+    global SERVICE_CONFIG
     while 1:
         try:
             print("Connecting to reader @"+SERVICE_CONFIG['READER_IP'])
-            url = 'http://'+SERVICE_CONFIG['READER_IP']+':5000/api/v1.0/general'
+            url = 'http://'+SERVICE_CONFIG['READER_IP']+':'+SERVICE_CONFIG['READER_API_PORT']+'/api/v1.0/general'
             x = requests.post(url, json = {'GetDeviceInfo': {'field_all': True}}, timeout=3)
             response = json.loads(x.text)
             SN = ""
@@ -193,7 +194,7 @@ def main():
     _thread.start_new_thread( data_report_loop, ("svc",)) # thread to post data reports
     _thread.start_new_thread( status_report_loop, ("report_status",)) # thread to post status reports
     _thread.start_new_thread( get_status_loop, ("get_status",)) # thread to get status periodically
-    wsapp = websocket.WebSocketApp("ws://"+IP+":7681", on_message=on_message, on_close=on_close, on_open=on_open)
+    wsapp = websocket.WebSocketApp("ws://"+IP+":"+SERVICE_CONFIG['READER_WS_PORT'], on_message=on_message, on_close=on_close, on_open=on_open)
     wsapp.run_forever() 
     
 if __name__ == "__main__":
