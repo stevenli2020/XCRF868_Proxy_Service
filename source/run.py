@@ -176,7 +176,7 @@ def main():
     global SERVICE_CONFIG
     while 1:
         try:
-            print("Connecting to reader @"+SERVICE_CONFIG['READER_IP'])
+            print("Connecting to reader @ "+SERVICE_CONFIG['READER_IP'])+":"+str(SERVICE_CONFIG['READER_API_PORT'])
             url = 'http://'+SERVICE_CONFIG['READER_IP']+':'+SERVICE_CONFIG['READER_API_PORT']+'/api/v1.0/general'
             x = requests.post(url, json = {'GetDeviceInfo': {'field_all': True}}, timeout=3)
             response = json.loads(x.text)
